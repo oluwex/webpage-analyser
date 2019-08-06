@@ -26,7 +26,7 @@ SECRET_KEY = 'c=^o69(e@+e^&7b1x_1gr)xrtu^y%=z@b4b5=)ahaf-$39bb@g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['analyseme.herokuapp.com',]
 
 
 # Application definition
