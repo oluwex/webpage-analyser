@@ -1,3 +1,5 @@
+import unittest
+
 from bs4 import BeautifulSoup
 import requests
 
@@ -31,21 +33,24 @@ def get_page_analysis(url=None):
     for table in tables:
         table_head = table.find('thead')
         table_rows = table.find_all('tr')
-        result.result_summary.append(TableSummary(count, len(table_rows), str(table_head))
-        # {
-        #     'index': count,
-        #     'number_of_rows': len(table_rows),
-        #     'table_head': str(table_head),
-        #     # 'table_head': table_head.prettify(),
-        # }
-        )
+        result.result_summary.append(TableSummary(count, len(table_rows), str(table_head)))
         count += 1
 
     return result
 
-def main():
-    get_page_analysis()
+# <----------------------------------------- Test ----------------------------------------->
+
+class TestPageAnalysis(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.url = 'http://docs.djangoproject.com/en/2.2/ref/templates/builtins/'
+
+    def test_analysis_successful(self):
+        analysis = get_page_analysis(self.url)
+        self.assertEqual(analysis.number_of_tables, 9)
+        self.assertGreater(len(analysis.result_summary), 0)
+        self.assertEqual(len(analysis.result_summary), 9)
 
 
 if __name__ == "__main__":
-    main()
+    unittest.main()
