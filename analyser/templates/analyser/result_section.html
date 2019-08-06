@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h2 class="text-center">Result</h2>
+        <p>Number of tables on page: {{ result.number_of_tables }}</p>
+        <div class="panel-group" id="accordion">
+            {% for table in result.result_summary %}
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ table.index }}">
+                                Table {{ table.index }} has {{ table.number_of_rows }}
+                                row{{ table.number_of_rows|pluralize }} <small>(Click to view table head definition)</small></a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{ table.index }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            {% if table.table_head != 'None' %}
+                            <pre>
+                                {{ table.table_head }}
+                            </pre>
+                            {% else %}
+                                No table head definition found
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

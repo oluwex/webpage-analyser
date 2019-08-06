@@ -1,0 +1,105 @@
+{% extends 'analyser/index.html' %}
+
+{% block links %}
+        <a class="btn btn-default btn-success text-center" href="{% url 'analyser:index' %}">Search</a>
+        {% endblock %}
+
+{% block result_area %}
+    <p id="searching">Searching...</p>
+    <div id="result_area" style="display: none;">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center">Result</h2>
+                <p>Number of tables on page: <span id="no_of_table">{{ result.number_of_tables }}</span></p>
+                <div class="panel-group" id="accordion">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="application/javascript">
+        let form = document.forms[0];
+        form.removeAttribute('action');
+        form.onsubmit = function (e) {
+            e.preventDefault();
+            let searching = document.getElementById('searching');
+            // Hide result area
+            let result_area = document.getElementById('result_area');
+            result_area.style.display = 'none';
+            // Clear accordion
+            document.getElementById('accordion').innerHTML = "";
+            $.ajax({
+                url: '{% url 'analyser-api:index-api' %}',
+                data: $(form).serialize(),
+                type: 'post',
+                beforeSend: function(){
+                    searching.style.display = 'block'
+                }
+            }).done(function (data) {
+                console.log(data);
+                document.getElementById('no_of_table').innerText = data.number_of_tables;
+                let accordion = document.getElementById('accordion');
+                for (var i=0; i<data.result_summary.length; i++){
+                    let info = data.result_summary[i];
+                    let panelHeading = createPanelHeading();
+                    let panel = createPanel();
+                    let panelTitle = createPanelTitle(info.index, info.number_of_rows);
+                    let panelCollapse = createPanelCollapse(info.index, info.table_head);
+
+                    panelHeading.appendChild(panelTitle);
+                    panel.appendChild(panelHeading);
+                    panel.appendChild(panelCollapse);
+                    accordion.appendChild(panel);
+                }
+                searching.style.display = 'none';
+                result_area.style.display = 'block';
+            }).fail(function () {
+
+            })
+        };
+
+        function createPanel(){
+            let ele = document.createElement('div');
+            ele.classList.add('panel');
+            return ele;
+        }
+
+        function createPanelHeading(){
+            let ele = document.createElement('div');
+            ele.classList.add('panel-heading');
+            return ele;
+        }
+
+        function createPanelTitle(index, number_of_rows){
+            let title = document.createElement('h4');
+            title.classList.add('panel-title');
+            let link = document.createElement('a');
+            link.setAttribute('data-toggle', 'collapse');
+            link.setAttribute('data-parent', '#accordion');
+            link.href = "#collapse" + index.toString();
+            link.innerHTML = "Table " + index + " has " + number_of_rows.toString() + " row(s) <small>(Click here to view more)</small>";
+            title.appendChild(link);
+            return title;
+        }
+
+        function createPanelCollapse(index, table_head){
+            let collapse = document.createElement('div');
+            let body = document.createElement('div');
+            collapse.id = 'collapse' + index.toString();
+            collapse.classList.add('panel-collapse', 'collapse');
+            body.classList.add('panel-body');
+            if (table_head !== "None"){
+                pre_ele = document.createElement('pre');
+                pre_ele.innerText = table_head;
+                body.appendChild(pre_ele);
+            }
+            else{
+                body.innerHTML = "No table head definition found";
+            }
+            collapse.appendChild(body);
+            return collapse
+        }
+    </script>
+{% endblock %}
