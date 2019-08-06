@@ -7,6 +7,9 @@ from .utils import get_page_analysis
 
 
 class ShowTableSummaryView(FormView):
+    """
+    View that reload when searching
+    """
     template_name = 'analyser/index.html'
     form_class = SearchForm
 
@@ -17,6 +20,9 @@ class ShowTableSummaryView(FormView):
 
 
 class ShowTableSummaryViaAPIView(TemplateView):
+    """
+    A view that conducts the searches on-page (without reloading)
+    """
     template_name = 'analyser/index2.html'
 
     def get_context_data(self, **kwargs):

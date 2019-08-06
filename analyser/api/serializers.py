@@ -4,12 +4,18 @@ from rest_framework.serializers import (
 
 
 class TableSerializer(Serializer):
+    """
+    Serializes table instances
+    """
     index = IntegerField(read_only=True)
     number_of_rows = IntegerField(read_only=True)
     table_head = CharField(read_only=True)
 
 
 class AnalysisSerializer(Serializer):
+    """
+    Serializes an analysis instance
+    """
     number_of_tables = IntegerField(read_only=True)
     result_summary = TableSerializer(many=True, read_only=True)
 

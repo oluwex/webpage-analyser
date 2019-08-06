@@ -2,12 +2,18 @@ from bs4 import BeautifulSoup
 import requests
 
 class Analysis(object):
+    """
+    An object encapsulating an analysis made on a webpage
+    """
     def __init__(self, number_of_tables):
         self.number_of_tables = number_of_tables
         self.result_summary = []
 
 
 class TableSummary(object):
+    """
+    An object return the individual summaries of the analysis on a single table
+    """
     def __init__(self, index, number_of_rows, table_head):
         self.index = index
         self.number_of_rows = number_of_rows
