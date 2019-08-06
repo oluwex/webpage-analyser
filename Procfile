@@ -1,1 +1,1 @@
-web: gunicorn landing.wsgi --log-file -
+web: gunicorn web_analyser.wsgi --log-file -
